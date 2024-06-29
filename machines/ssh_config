@@ -1,8 +1,0 @@
-Host jumphost
-  HostName 10.0.0.1
-  User koshchei
-
-Host targethost
-  HostName 192.168.0.153
-  User root
-  ProxyJump jumphost
