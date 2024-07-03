@@ -1,14 +1,8 @@
 [controlplanes]
-172.30.0.201	ansible_connection=ssh	ansible_user=vagrant
-172.30.0.202	ansible_connection=ssh	ansible_user=vagrant
-
-[controlplanes:vars]
-dns_server=172.30.0.1
+172.30.0.201	ansible_connection=ssh	ansible_user=vagrant	ansible_ssh_common_args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+172.30.0.202	ansible_connection=ssh	ansible_user=vagrant	ansible_ssh_common_args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 
 [workernodes]
-172.30.0.203	ansible_connection=ssh	ansible_user=vagrant
-172.30.0.204	ansible_connection=ssh	ansible_user=vagrant
-172.30.0.205	ansible_connection=ssh	ansible_user=vagrant
-
-[workernodes:vars]
-dns_server=172.30.0.1
+172.30.0.203	ansible_connection=ssh	ansible_user=vagrant	ansible_ssh_common_args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+172.30.0.204	ansible_connection=ssh	ansible_user=vagrant	ansible_ssh_common_args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+172.30.0.205	ansible_connection=ssh	ansible_user=vagrant	ansible_ssh_common_args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"

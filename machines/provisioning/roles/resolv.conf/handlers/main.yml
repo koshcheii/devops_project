@@ -1,6 +1,4 @@
-# cat resolv.conf/handlers/main.yml
 ---
-- name: reload NetworkManager
-  service:
-    name: NetworkManager
-    state: reloaded
+- name: update resolvconf
+  become: yes
+  ansible.builtin.shell: resolvconf -u

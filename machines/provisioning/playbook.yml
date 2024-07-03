@@ -1,5 +1,5 @@
 ---
 - hosts: all
   roles:
-    - role: general
     - role: resolv.conf
+    - role: authorized_keys

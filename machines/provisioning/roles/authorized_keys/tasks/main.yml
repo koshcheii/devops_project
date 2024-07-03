@@ -1,11 +1,4 @@
 ---
-- name: Install htop
-  become: true
-  ansible.builtin.apt:
-    name: "htop"
-    state: present
-    update_cache: yes
-
 - name: Set authorized key taken from file
   ansible.posix.authorized_key:
     user: vagrant

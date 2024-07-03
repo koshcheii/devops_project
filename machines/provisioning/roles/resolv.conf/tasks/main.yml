@@ -1,28 +1,19 @@
 ---
-- name: make sure line 'dns=none' is set in /etc/NetworkManager/NetworkManager.conf
+- name: install openresolv package
+  become: yes
+  ansible.builtin.apt:
+    name: "openresolv"
+    state: present
+    update_cache: yes
+
+- name: add dns server to resolve.conf
   become: yes
   ini_file:
-    path: /etc/NetworkManager/NetworkManager.conf
+    path: /etc/resolvconf.conf
     state: present
     no_extra_spaces: yes
-    section: main
-    option: dns
-    value: none
-    owner: root
-    group: root
-    mode: 0644
-    backup: yes
+    option: name_servers
+    value: "{{ dns_server }}"
   notify:
-    - reload NetworkManager
+    - update resolvconf
 
-- name: deploy resolv.conf template
-  become: yes
-  template:
-    src: roles/resolv.conf/templates/resolv.conf.j2
-    dest: /etc/resolv.conf
-    owner: root
-    group: root
-    mode: 0644
-    backup: yes
-  notify:
-    - reload NetworkManager    
