@@ -1,0 +1,10 @@
+- name: try ping nodes by ip
+  ansible.builtin.shell:
+    cmd: "ping -c 1 {{ hostvars[item].ansible_ssh_host }}"
+  loop: "{{ groups['all'] }}"
+
+- name: try ping nodes by hostname
+  ansible.builtin.shell:
+    cmd: "ping -c 1 {{ item }}"
+  loop: "{{ groups['all'] }}"
+

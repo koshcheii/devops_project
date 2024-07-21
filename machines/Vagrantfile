@@ -34,29 +34,24 @@ Vagrant.configure("2") do |config|
     libvirt.cpus = 2
   end
 
-  config.vm.define :ctrl1 do |node|
-    node.vm.hostname = "ctrl1"
-    node.vm.network "private_network", ip: "172.30.0.201", netmask: "255.255.255.0"
+  config.vm.define :node1 do |node|
+    node.vm.hostname = "node1.internal"
   end
   
-  config.vm.define :ctrl2 do |node|
-    node.vm.hostname = "ctrl2"
-    node.vm.network "private_network", ip: "172.30.0.202", netmask: "255.255.255.0"
+  config.vm.define :node2 do |node|
+    node.vm.hostname = "node2.internal"
   end
 
-  config.vm.define :ctrl3 do |node|
-    node.vm.hostname = "ctrl3"
-    node.vm.network "private_network", ip: "172.30.0.203", netmask: "255.255.255.0"
+  config.vm.define :node3 do |node|
+    node.vm.hostname = "node3.internal"
   end
 
-  config.vm.define :worker1 do |node|
-    node.vm.hostname = "worker1"
-    node.vm.network "private_network", ip: "172.30.0.204", netmask: "255.255.255.0"
+  config.vm.define :node4 do |node|
+    node.vm.hostname = "node4.internal"
   end
   
-  config.vm.define :worker2 do |node|
-    node.vm.hostname = "worker2"
-    node.vm.network "private_network", ip: "172.30.0.205", netmask: "255.255.255.0"
+  config.vm.define :node5 do |node|
+    node.vm.hostname = "node5.internal"
   end
 
   # Disable automatic box update checking. If you disable this, then

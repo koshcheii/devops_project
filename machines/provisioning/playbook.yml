@@ -1,5 +1,7 @@
 ---
 - hosts: all
   roles:
-    - role: resolv.conf
+    #    - role: resolv.conf
     - role: authorized_keys
+    - role: etc_hosts
+    - role: check_network
