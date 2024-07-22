@@ -5,3 +5,6 @@
     - role: authorized_keys
     - role: etc_hosts
     - role: check_network
+    - role: install_packages
+    - role: k8s_preparing
+    - role: install_k8s

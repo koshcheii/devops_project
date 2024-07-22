@@ -1,0 +1,4 @@
+- name: Run a preparing script
+  become: true
+  ansible.builtin.script:
+    cmd: static/prepare.sh
