@@ -76,9 +76,9 @@
   shell: crictl --runtime-endpoint unix:///var/run/containerd/containerd.sock version
   register: result
 
-- name: Print return information from the previous task
-  ansible.builtin.debug:
-    var: result
+  #- name: Print return information from the previous task
+  #  ansible.builtin.debug:
+  #    var: result
 
     #- name: Run command and check output
     #  expect:
@@ -92,3 +92,24 @@
       - mline != ''
   vars:
     mline: "{{ result.stdout | regex_search('^Version.*$', multiline=True, ignorecase=True) }}"
+
+# check containerd working
+- name: check containerd working (Run command and check output)
+  become: true
+  shell: ctr images pull docker.io/library/hello-world:latest && ctr run docker.io/library/hello-world:latest hello-world
+  register: result
+
+#- name: Print return information from the previous task
+#  ansible.builtin.debug:
+#    var: result
+
+- name: Please use 'msg' when ansible version is smaller than 2.7
+  ansible.builtin.assert:
+    that:
+      - mline != ''
+  vars:
+    mline: "{{ result.stdout | regex_search('^.*Hello from Docker!.*$', multiline=True, ignorecase=True) }}"
+
+- name: remove container after test
+  become: true
+  shell: ctr c rm hello-world
