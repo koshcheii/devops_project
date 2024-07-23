@@ -1,0 +1,94 @@
+#https://github.com/containerd/containerd/releases/download/v1.7.20/containerd-1.7.20-linux-amd64.tar.gz
+- name: Download file with check (sha256)
+  ansible.builtin.get_url:
+    url: https://github.com/containerd/containerd/releases/download/v1.7.20/containerd-1.7.20-linux-amd64.tar.gz
+    dest: /tmp/containerd-1.7.20-linux-amd64.tar.gz
+    checksum: sha256:e09410787b6f392748959177a84e024424f75d7aff33ea1c5b783f2260edce67
+
+- name: Run a command that uses non-posix shell-isms (in this example /bin/sh doesn't handle redirection and wildcards together but bash does)
+  become: true
+  ansible.builtin.shell: tar Cxzvf /usr/local /tmp/containerd-1.7.20-linux-amd64.tar.gz
+  args:
+    executable: /bin/bash
+
+- name: Ensure directory exists
+  become: true
+  ansible.builtin.file:
+    path: /usr/local/lib/systemd/system
+    state: directory
+    #    recurse: yes
+    #    owner: foo
+    #    group: foo
+    mode: '0755'
+
+- name: Download file
+  become: true
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
+    dest: /usr/local/lib/systemd/system/containerd.service
+
+- name: Restart service containerd, also issue daemon-reload to pick up config changes
+  become: true
+  ansible.builtin.systemd_service:
+    state: started
+    daemon_reload: true
+    name: containerd
+    enabled: true
+
+#install runc below
+- name: Download file
+  ansible.builtin.get_url:
+    url: https://github.com/opencontainers/runc/releases/download/v1.1.13/runc.amd64
+    dest: /tmp/runc.amd64
+
+- name: Run a command that uses non-posix shell-isms (in this example /bin/sh doesn't handle redirection and wildcards together but bash does)
+  become: true
+  ansible.builtin.shell: install -m 755 /tmp/runc.amd64 /usr/local/sbin/runc
+  args:
+    executable: /bin/bash
+
+# Installing CNI plugins
+- name: Download file with check (sha256)
+  ansible.builtin.get_url:
+    url: https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-amd64-v1.5.1.tgz
+    dest: /tmp/cni-plugins-linux-amd64-v1.5.1.tgz
+    checksum: sha256:77baa2f669980a82255ffa2f2717de823992480271ee778aa51a9c60ae89ff9b
+
+- name: Ensure directory exists
+  become: true
+  ansible.builtin.file:
+    path: /opt/cni/bin
+    state: directory
+    recurse: yes
+    #    owner: foo
+    #    group: foo
+    #    mode: '0755'
+
+- name: Run a command that uses non-posix shell-isms (in this example /bin/sh doesn't handle redirection and wildcards together but bash does)
+  become: true
+  ansible.builtin.shell: tar Cxzvf /opt/cni/bin /tmp/cni-plugins-linux-amd64-v1.5.1.tgz
+  args:
+    executable: /bin/bash
+
+# check containerd avalaibility
+- name: Run command and check output
+  become: true
+  shell: crictl --runtime-endpoint unix:///var/run/containerd/containerd.sock version
+  register: result
+
+- name: Print return information from the previous task
+  ansible.builtin.debug:
+    var: result
+
+    #- name: Run command and check output
+    #  expect:
+    #    command: crictl --runtime-endpoint unix:///var/run/containerd/containerd.sock version
+    #    responses: '^.*Version.*$'
+
+
+- name: Please use 'msg' when ansible version is smaller than 2.7
+  ansible.builtin.assert:
+    that:
+      - mline != ''
+  vars:
+    mline: "{{ result.stdout | regex_search('^Version.*$', multiline=True, ignorecase=True) }}"

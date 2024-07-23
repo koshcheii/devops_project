@@ -1,5 +1,7 @@
 ---
 - hosts: all
+  strategy: free
+  #serial: 5
   roles:
     #    - role: resolv.conf
     - role: authorized_keys
@@ -8,3 +10,4 @@
     - role: install_packages
     - role: k8s_preparing
     - role: install_k8s
+    - role: install_containerd
