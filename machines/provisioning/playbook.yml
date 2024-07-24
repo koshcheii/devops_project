@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  strategy: free
+  #strategy: free
   #serial: 5
   roles:
     #    - role: resolv.conf
@@ -11,3 +11,7 @@
     - role: k8s_preparing
     - role: install_k8s
     - role: install_containerd
+
+- hosts: control_plane
+  roles:
+    - role: create_balancer

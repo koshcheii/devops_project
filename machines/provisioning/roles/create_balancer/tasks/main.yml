@@ -1,0 +1,47 @@
+# keepalived
+- name: Copy keepalived config file
+  become: true
+  ansible.builtin.copy:
+    src: static/keepalived.conf
+    dest: /etc/keepalived/keepalived.conf
+    #owner: foo
+    #group: foo
+    #mode: '0644'
+
+- name: Copy file with owner and permissions
+  become: true
+  ansible.builtin.copy:
+    src: static/check_apiserver.sh
+    dest: /etc/keepalived/check_apiserver.sh
+    mode: a+x
+
+- name: rake sure a service unit is running
+  become: true
+  ansible.builtin.systemd_service:
+    state: started
+    name: keepalived
+    enabled: true
+
+# haproxy
+#- name: update /etc/hosts file
+#  become: true
+#  blockinfile:
+#    dest: /etc/hosts
+#    content: "{{ lookup('template', 'templates/etc/hosts.j2') }}"
+#    state: present
+
+- name: Template a file to /etc/haproxy/haproxy.cfg
+  become: true
+  ansible.builtin.template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    #    owner: bin
+    #    group: wheel
+    #    mode: '0644'
+
+- name: restart haproxy service
+  become: true
+  ansible.builtin.systemd_service:
+    state: restarted
+    name: haproxy
+    enabled: true

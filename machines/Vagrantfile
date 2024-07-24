@@ -111,5 +111,9 @@ Vagrant.configure("2") do |config|
   # select the provisioner of your choice
   config.vm.provision :ansible do |ansible|
     ansible.playbook = "provisioning/playbook.yml"
+    ansible.groups = {
+      "control_plane" => ["node1", "node2", "node3"],
+      "worker_nodes" => ["node4", "node5"]
+    }
   end
 end
